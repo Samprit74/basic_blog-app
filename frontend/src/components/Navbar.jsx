@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <nav className="navbar d-flex justefy-content-between align-items-center p-3">
       {/* <h1 className='mx-5 text-white fs-2 fw-bold'>Navber</h1> */}
-      <Link to={'/'}><h1 className='mx-5 text-white fs-2 fw-bold'>Navber</h1></Link>
+      <Link to={'/'}><h1 className='mx-5 text-white fs-2 fw-bold'>GeoGlimpse</h1></Link>
       <div className='d-flex align-item-center'>
 
         {!user ? <Link to={'/login'}><h1 className='btn_sign mx-3'>Sign in</h1></Link> :
