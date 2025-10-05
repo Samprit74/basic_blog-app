@@ -1,0 +1,16 @@
+.user-profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.btn-warning {
+  background-color: #ffc107 !important;
+  border: none;
+  color: #000;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800 !important;
+}

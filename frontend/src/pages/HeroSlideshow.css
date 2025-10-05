@@ -1,25 +1,141 @@
+/* Hero Background Images */
 .hero-bg-image {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   background-size: cover;
   background-position: center;
+  filter: brightness(0.7) saturate(1.2);
+  transform: scale(1.05);
   opacity: 0;
-  transition: opacity 2s ease-in-out;
-  z-index: 1;
+  transition: opacity 1.8s ease, transform 5s ease;
+  z-index: 0;
 }
 
 .hero-bg-image.active {
   opacity: 1;
+  transform: scale(1);
 }
 
+/* Soft gradient overlay for depth */
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+  z-index: 1;
+}
+
+/* Hero Section Container */
 .hero-section {
-  padding: 150px 20px;
+  position: relative;
+  min-height: 100vh;
+  padding: 120px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Compact Glass Card */
+.hero-content {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 30px 50px;
+  border-radius: 18px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+  animation: fadeUp 1.2s ease-out;
+  max-width: 650px;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Typography --- */
+.hero-section h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #ffffff; /* Changed to solid white */
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+}
+
+.hero-section p {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 35px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* Button */
+.hero-section .btn-primary {
+  background: #0072ff;
+  color: #fff;
+  border: none;
+  padding: 12px 36px;
+  font-size: 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 114, 255, 0.4);
+}
+
+.hero-section .btn-primary:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(0, 114, 255, 0.6);
+}
+
+/* Subtle glowing accents */
+.hero-section::before,
+.hero-section::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+}
+
+.hero-section::before {
+  width: 300px;
+  height: 300px;
+  background: #0072ff;
+  top: 15%;
+  left: -100px;
+  opacity: 0.4;
+  animation: floatOrb 10s ease-in-out infinite alternate;
+}
+
+.hero-section::after {
+  width: 250px;
+  height: 250px;
+  background: #00f0b5;
+  bottom: 10%;
+  right: -80px;
+  opacity: 0.4;
+  animation: floatOrb 12s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes floatOrb {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(25px);
+  }
 }

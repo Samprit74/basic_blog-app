@@ -1,76 +1,81 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { get, Base_url } from '../services/Endpoint'
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { get, Base_url } from "../services/Endpoint";
+  // ✅ correct path
+import { FaTrashAlt, FaEdit } from "react-icons/fa";
+import "./Post.css";
 
 function Post() {
-  const { id } = useParams()
-  const [singleblog, setSingleblog] = useState(null)
-  const singlePost = async () => {
-    try {
-      const responce = await get(`/public/singlepost/${id}`)
-      const data = responce.data
-      setSingleblog(data.post)
-      console.log(data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-  useEffect(() => {
-    singlePost()
-  }, [])
-  return (
-    <>
-      <div className='container text-white mt-5 mb-5'>
-        <div className='row'>
-          <div className='col-md-12'>
-            <h1 className='fw-bold text-white mb-4 display-4'>{singleblog && singleblog.title}</h1>
-            <img src={ singleblog && `${Base_url}/images/${singleblog.image}`}
-              alt="Exploring the art of writing"
-              className='img-fluid-mb-2 '
-              style={{ width: '100%', borderRadious: "10px", objectFit: 'cover', maxHeight: '500px' }}
-            />
-            <p className='mb-5 '>
-              {singleblog && singleblog.desc}
-            </p>
-            <hr />
-            <h3 className='mt-5 mb-4'>Leave a Comment</h3>
-            <form >
-              <div className='mb-3'>
-                <label htmlFor='comment' className='form-label'>Comment</label>
-                <textarea className='form-control white-placeholder' id="comment" rows="4"
-                  style={{ backgroundColor: "#181a1b", color: "white", border: "1px solid #444" }}
-                  placeholder='write your comment here' required />
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-              </div>
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-            </form>
-            <hr />
-            <h3 className='mt-5 mb-4'>Comments</h3>
-            {/* 1user comment part */}
-            {singleblog && singleblog.comments.map((Comment)=>{
-              return (
-                < div className='bg-secondary p-3 rounded mb-3 d-flex'>
-              <img src={`${Base_url}/images/${Comment.userId.profile}`}
-                alt="John Doe"
-                className='irounded-circle me-3'
-                style={{ width: '50px', height: "50px", objectFit: 'cover' ,borderRadius: '50%'}}
-              />
-              <div>
-                <h5 className='mb-1'>{Comment.userId.username}</h5>
-                <p className='mb-0'>{Comment.comment}</p>
-                {/* 1user comment part */}
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await get("/blog/getall"); // ✅ same as backend route
+        if (res.data && res.data.success) {
+          console.log("Fetched posts:", res.data.posts);
+          setPosts(res.data.posts);
+        } else {
+          console.error("Unexpected API response:", res.data);
+        }
+      } catch (err) {
+        console.error("Error fetching posts:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading)
+    return <p className="text-center text-white mt-5">Loading posts...</p>;
+
+  if (posts.length === 0)
+    return <p className="text-center text-white mt-5">No posts available.</p>;
+
+  return (
+    <div className="container text-white mt-5 mb-5">
+      <h2 className="text-white mb-4">All Posts</h2>
+      <div className="row">
+        {posts.map((post) => (
+          <div className="col-md-4 mb-4" key={post._id}>
+            <div className="post-card bg-light rounded p-3 h-100 d-flex flex-column shadow">
+              {post.image ? (
+                <img
+                  src={`${Base_url}/images/${post.image}`} // ✅ points to port 7000
+                  alt={post.title}
+                  className="post-image mb-3 rounded"
+                  onError={(e) => {
+                    e.target.src = "/fallback.jpg";
+                  }}
+                />
+              ) : (
+                <img
+                  src="/fallback.jpg"
+                  alt="default"
+                  className="post-image mb-3 rounded"
+                />
+              )}
+              <h5 className="text-dark">{post.title}</h5>
+              <p className="text-secondary">
+                {post.desc?.substring(0, 100)}...
+              </p>
+              <div className="mt-auto d-flex justify-content-between">
+                <button className="btn btn-warning btn-sm text-dark">
+                  <FaEdit /> Edit
+                </button>
+                <button className="btn btn-danger btn-sm">
+                  <FaTrashAlt /> Delete
+                </button>
               </div>
             </div>
-              )
-            })}
           </div>
-        </div>
+        ))}
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
-export default Post
+export default Post;

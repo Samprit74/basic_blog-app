@@ -1,52 +1,27 @@
 const PostModel = require("../models/blog");
-const CommentModel = require("../models/comments");
 
+// Get single post with comments populated
 const GetSinglePost = async (req, res) => {
-    try {
-        const postId = req.params.id
-        const FindPost = await PostModel.findById(postId)
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'userId'
-                }
-            });
-        if (!FindPost) {
-            const PostModel = require("../models/blog");
-            require('../models/comments');
+  try {
+    const postId = req.params.id;
 
-            const GetSinglePost = async (req, res) => {
-                try {
-                    const postId = req.params.id;
-                    const FindPost = await PostModel.findById(postId)
-                        .populate({
-                            path: 'comments', // <-- Correct field name
-                            populate: {
-                                path: 'userId'
-                            }
-                        });
-                    if (!FindPost) {
-                        return res.status(404).json({ success: false, message: "Blog not found(from getsingle post)" });
-                    }
-                    return res.status(200).json({ success: true, post: FindPost });
-                }
-                catch (err) {
-                    console.log('error in GetSinglePost:', err);
-                    return res.status(500).json({ success: false, message: "Internal server error (GetSinglePost)" });
-                }
-            };
+    const post = await PostModel.findById(postId).populate({
+      path: "comments",
+      populate: {
+        path: "userId",
+        select: "username profile", // only include username and profile
+      },
+    });
 
-            module.exports = { GetSinglePost };
-            return res.status(404).json({ success: false, message: "Blog not found(from getsingle post)" })
-        }
-        return res.status(200).json({ success: true, message: "cpost is avalable in db", post: FindPost });
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
     }
-    catch (err) {
-        console.log('error  in api(Create)', err)
-        return res.status(500).json({ success: false, message: "internal SERVER error(dashboard all user)" })
-    }
-}
 
+    return res.status(200).json({ success: true, post });
+  } catch (err) {
+    console.error("Error in GetSinglePost:", err);
+    return res.status(500).json({ success: false, message: "Internal server error (GetSinglePost)" });
+  }
+};
 
-
-module.exports = { GetSinglePost }
+module.exports = { GetSinglePost };

@@ -1,48 +1,63 @@
-import { useState } from 'react'
-import './App.css'
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
-import Home from './pages/Home.jsx'
-import Post from './pages/Post'
-import Register from './pages/Register'
-import Profile from './pages/Profile'
-import UserLayout from './pages/layout/UserLayout'
-import AdminLayout from './pages/layout/AdminLayout'
-import Dashboard from './pages/admin/Dashboard'
-import Addpost from './pages/admin/Addpost'
-import Users from './pages/admin/Users'
-import Allposts from './pages/admin/Allposts'
-import Login from './pages/Login'
-import { Toaster } from 'react-hot-toast'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+
+import Home from './pages/Home';
+import Post from './pages/Post';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+
+import UserLayout from './pages/layout/UserLayout';
+import AdminLayout from './pages/layout/AdminLayout';
+
+import Dashboard from './pages/admin/Dashboard';
+import Addpost from './pages/admin/Addpost';
+import Users from './pages/admin/Users';
+import Allposts from './pages/admin/Allposts';
+
+import PrivateRoute from './components/PrivateRoute';
+
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <BrowserRouter>
-        <Toaster />
-        <Routes>
-          <Route path='/' element={<UserLayout />} >
-            <Route index element={<Home />} />
-            <Route path='post/:id' element={<Post />} />
-            <Route path='profile/:id' element={<Profile />} />
-          </Route>
+    <BrowserRouter>
+      <Toaster />
 
-          <Route path='/dashboard' element={<AdminLayout />} >
-            <Route index element={<Dashboard />} />
-            <Route path='addpost' element={<Addpost />} />
-            <Route path='users' element={<Users />} />
-            <Route path='allpost' element={<Allposts />} />
-          </Route>
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
+      <Routes>
+        {/* Public Auth Routes */}
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
 
+        {/* User Routes */}
+        <Route
+          path='/'
+          element={
+            <PrivateRoute>
+              <UserLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Home />} />
+          <Route path='post/:id' element={<Post />} />
+          <Route path='profile/:id' element={<Profile />} />
+        </Route>
 
-
-        </Routes>
-      </BrowserRouter>
-
-    </>
-  )
+        {/* Admin Routes */}
+        <Route
+          path='/dashboard/*'
+          element={
+            <PrivateRoute adminOnly={true}>
+              <AdminLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path='addpost' element={<Addpost />} />
+          <Route path='users' element={<Users />} />
+          <Route path='allpost' element={<Allposts />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

@@ -1,54 +1,79 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeUser } from '../redux/AuthSlice';
 import { post, Base_url } from '../services/Endpoint';
 import { persistor } from '../redux/store';
+import './BlogStyles.css';
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
   const handleLogout = async () => {
     try {
-      const response = await post('/auth/logout'); // send request to backend
-      console.log('Logout success:', response.data);
-
-      dispatch(removeUser());         // clear Redux state
-      await persistor.purge();        //  clear redux-persist localStorage
-      navigate('/login');             // redirect to login
+      await post('/auth/logout');
+      dispatch(removeUser());
+      await persistor.purge();
+      navigate('/login');
     } catch (err) {
-      console.error('Logout error:', err);
+      console.error(err);
     }
+  };
 
-  }
-  // const [islogin, setIsLogin] = useState(true);
-  const user = useSelector((state) => state.auth.user)
-  console.log('user:', user);
-
+  // Safely build profile image URL
+  const profileSrc = user?.profile
+    ? user.profile.startsWith('default/')
+      ? `${Base_url}/${user.profile}`
+      : `${Base_url}/images/${user.profile}`
+    : 'https://randomuser.me/api/portraits/lego/1.jpg'; // fallback
 
   return (
-    <nav className="navbar d-flex justefy-content-between align-items-center p-3">
-      {/* <h1 className='mx-5 text-white fs-2 fw-bold'>Navber</h1> */}
-      <Link to={'/'}><h1 className='mx-5 text-white fs-2 fw-bold'>GeoGlimpse</h1></Link>
-      <div className='d-flex align-item-center'>
+    <nav className="navbar-container">
+      <Link to="/" className="navbar-logo">
+        GeoGlimpse
+      </Link>
 
-        {!user ? <Link to={'/login'}><h1 className='btn_sign mx-3'>Sign in</h1></Link> :
-          (<div className='dropdown'>
-            <div className='avatar-container pointer roundedcircle overflow-hidden bg-info ' data-bs-toggle='dropdown' aria-expanded='false' style={{ width: '40px', height: '40px', cursor: 'pointer' }}>
-              <img src={`${Base_url}/images/${user.profile}`}
-                className='img-fluid h-100 w-100  rounded-circle'
-                style={{ objectFit: 'cover' }} alt='' />
+      <div className="navbar-right">
+        {!user ? (
+          <Link to="/login" className="navbar-signin">
+            Sign in
+          </Link>
+        ) : (
+          <div className="navbar-user dropdown">
+            <div
+              className="avatar"
+              data-bs-toggle="dropdown"
+              style={{ cursor: 'pointer' }}
+            >
+              <img
+                src={profileSrc || null}
+                alt="profile"
+                style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+              />
             </div>
-            <ul className='dropdown-menu dropdown-menu-end dropdown-menu-dark'>
-              {user.role === 'admin' ? <li><Link className='dropdown-item' to='/dashboard'>Dashboard</Link></li> : null}
-
-              <li><Link className='dropdown-item' to='/profile/1212'>Profile</Link></li>
-              <li><a className='dropdown-item' style={{ cursor: "pointer" }} onClick={handleLogout}>Sign out</a></li>
+            <ul className="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+              {user.role === 'admin' && (
+                <li>
+                  <Link className="dropdown-item" to="/dashboard">
+                    Dashboard
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Link className="dropdown-item" to={`/profile/${user._id}`}>
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <button className="dropdown-item" onClick={handleLogout}>
+                  Sign out
+                </button>
+              </li>
             </ul>
-          </div>)}
-
-
+          </div>
+        )}
       </div>
     </nav>
   );

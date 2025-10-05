@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+.profile-page {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Montserrat', sans-serif;
+  color: #fff;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.profile-pic-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.profile-pic-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fff;
+}
+
+.camera-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  color: #000;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.camera-overlay:hover {
+  transform: scale(1.1);
+}
+
+.profile-image-input {
+  display: none;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.username {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem 0;
+  color: #fff;
+}
+
+.user-email {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-bottom: 0.8rem;
+}
+
+.edit-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+  background: #ccc;
+  transform: translateY(-2px);
+}
+
+.profile-posts {
+  margin-top: 2rem;
+}
+
+.posts-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.posts-icon {
+  font-size: 1.5rem;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.post-card {
+  background: #2b2b2b;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.post-card img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+}
+
+.post-title {
+  padding: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #fff;
+}
+
+.text-muted {
+  color: #aaa;
+  font-style: italic;
+  text-align: center;
+  margin-top: 1rem;
+}
